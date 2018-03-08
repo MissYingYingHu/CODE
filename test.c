@@ -1,33 +1,33 @@
+#include"LinkQueue.h"
 #include<stdio.h>
-#include"seqqueue.h"
-void TEST_SeqQueue()
+void TEST_LinkQueue()
 {
-	QueueType temp = 0;
+	QueueNodeType tmp = 0;
 	TEST_HEADER;
-	SeqQueueInit(&q);
-	SeqQueuePush(&q,'a');
-	SeqQueuePush(&q,'b');
-	SeqQueuePush(&q,'c');
-	SeqQueuePush(&q,'d');
-	SeqQueueTop(&q,&temp);
-	printf("top expect is a ,actual is %c\n",temp);
-	SeqQueuePop(&q);
+	LinkQueueInit(&q);
+	LinkQueuePush(&q,'a');
+	LinkQueuePush(&q,'b');
+	LinkQueuePush(&q,'c');
+	LinkQueuePush(&q,'d');
 
-	SeqQueueTop(&q,&temp);
-	printf("top expect is b ,actual is %c\n",temp);
-	SeqQueuePop(&q);
+	LinkQueueTop(&q,&tmp);
+	printf("expect is a,actual is %c\n",tmp);
+	LinkQueuePop(&q);
 
-	SeqQueueTop(&q,&temp);
-	printf("top expect is c ,actual is %c\n",temp);
-	SeqQueuePop(&q);
+	LinkQueueTop(&q,&tmp);
+	printf("expect is b,actual is %c\n",tmp);
+	LinkQueuePop(&q);
 
-	SeqQueueTop(&q,&temp);
-	printf("top expect is d ,actual is %c\n",temp);
-	SeqQueuePop(&q);
+	LinkQueueTop(&q,&tmp);
+	printf("expect is c,actual is %c\n",tmp);
+	LinkQueuePop(&q);
+
+	LinkQueueTop(&q,&tmp);
+	printf("expect is d,actual is %c\n",tmp);
+	LinkQueuePop(&q);
 }
-//////////////////test/////////////////////
 int main()
 {
-	TEST_SeqQueue();
+	TEST_LinkQueue();
 	return 0;
 }
