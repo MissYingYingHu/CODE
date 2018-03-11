@@ -1,33 +1,67 @@
-#include"LinkQueue.h"
 #include<stdio.h>
-void TEST_LinkQueue()
+#include"LinkStack.h"
+
+void TEST_PushStack()
 {
-	QueueNodeType tmp = 0;
-	TEST_HEADER;
-	LinkQueueInit(&q);
-	LinkQueuePush(&q,'a');
-	LinkQueuePush(&q,'b');
-	LinkQueuePush(&q,'c');
-	LinkQueuePush(&q,'d');
-
-	LinkQueueTop(&q,&tmp);
-	printf("expect is a,actual is %c\n",tmp);
-	LinkQueuePop(&q);
-
-	LinkQueueTop(&q,&tmp);
-	printf("expect is b,actual is %c\n",tmp);
-	LinkQueuePop(&q);
-
-	LinkQueueTop(&q,&tmp);
-	printf("expect is c,actual is %c\n",tmp);
-	LinkQueuePop(&q);
-
-	LinkQueueTop(&q,&tmp);
-	printf("expect is d,actual is %c\n",tmp);
-	LinkQueuePop(&q);
+	FunctionName;
+	InitStack(&Lstack);
+	PushStack(&Lstack,'a');
+	PushStack(&Lstack,'b');
+	PushStack(&Lstack,'c');
+	PushStack(&Lstack,'d');
+	ShowStack(Lstack);
 }
+
+void TEST_PopStack()
+{
+	FunctionName;
+	InitStack(&Lstack);
+	PushStack(&Lstack,'a');
+	PushStack(&Lstack,'b');
+	PushStack(&Lstack,'c');
+	PushStack(&Lstack,'d');
+	ShowStack(Lstack);
+	PopStack(&Lstack);
+	PopStack(&Lstack);
+	ShowStack(Lstack);
+	PopStack(&Lstack);
+	ShowStack(Lstack);
+	PopStack(&Lstack);
+	ShowStack(Lstack);
+	PopStack(&Lstack);
+	ShowStack(Lstack);
+}
+void TEST_TopStack()
+{
+	LElemType r ;
+	FunctionName;
+	InitStack(&Lstack);
+	PushStack(&Lstack,'a');
+	PushStack(&Lstack,'b');
+	PushStack(&Lstack,'c');
+	PushStack(&Lstack,'d');
+	ShowStack(Lstack);
+	r = TopStack(Lstack);
+	printf("Õ»¶¥ÔªËØÊÇ£º%c \n",r);
+}
+void TEST_DestroyStack()
+{
+	FunctionName;
+	InitStack(&Lstack);
+	PushStack(&Lstack,'a');
+	PushStack(&Lstack,'b');
+	PushStack(&Lstack,'c');
+	PushStack(&Lstack,'d');
+	ShowStack(Lstack);
+	DestroyStack(&Lstack);
+	ShowStack(Lstack);
+}
+////////////////////////////////////////////////////////////
 int main()
 {
-	TEST_LinkQueue();
+	TEST_PushStack();
+	TEST_PopStack();
+	TEST_TopStack();
+	TEST_DestroyStack();
 	return 0;
 }
