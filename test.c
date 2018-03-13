@@ -1,48 +1,49 @@
 #include<stdio.h>
-#include"AddressBook.h"
-
-void menu(){
-	printf("\n○○○○○○○○○○○○○○○○○○○○○○○○○○○○○\n");
-	printf("\n            1.打印通讯录            \n");
-	printf("\n            2.添加通讯录            \n");
-	printf("\n            3.删除通讯录            \n");
-	printf("\n            4.查找通讯录            \n");
-	printf("\n            5.修改通讯录            \n");
-	printf("\n            6.销毁通讯录            \n");
-	printf("\n            0.退出通讯录            \n");
-	printf("\n○○○○○○○○○○○○○○○○○○○○○○○○○○○○○\n");
-}
-int main(){
+#include"address_book.h"
+int main()
+{
 	int input = 0;
-	InitAddressBook(&addr_book);
-	LoadAddrBook(&addr_book);
+	ADDR_BOOK_Init(&ADDRLIST);
+	LOAD_ADDRLIST_BOOK(&ADDRLIST);
 	do
 	{
 		menu();
-		printf("亲，请输入您的需求：");
+		printf("请选择你的需求：");
 		scanf("%d",&input);
 		switch(input)
 		{
-		case DISPLAY:DisplayAddressBook(&addr_book);
+		case ADDContact:
+			{
+				ADD_ADDR_BOOK(&ADDRLIST);
+				SAVE_ADDRLIST_BOOK(&ADDRLIST);
+			}
 			break;
-		case ADD: AddAddressBook(&addr_book);
-				  SaveAddrBook(&addr_book);
+		case DELETEContact:
+			ERASE_ADDRLIST_BOOK(&ADDRLIST);
+			SAVE_ADDRLIST_BOOK(&ADDRLIST);
 			break;
-		case ERASE:EraseAddrBook(&addr_book);
-				   SaveAddrBook(&addr_book);
+		case FINDContact:
+			FIND_ADDRLIST_BOOK(&ADDRLIST);
 			break;
-		case FIND:FindAddrBook(&addr_book);
+		case UPDATAContact:
+			UPDATA_ADDRLIST_BOOK(&ADDRLIST);
+			SAVE_ADDRLIST_BOOK(&ADDRLIST);
 			break;
-		case INSERT:InsertAddrBook(&addr_book);
-		        	SaveAddrBook(&addr_book);
+		case DISPLAYContact:
+			DISPLAY_ALL_ADDRLIST_BOOK(&ADDRLIST);
 			break;
-		case DESTROY:DestroyAddrBook(&addr_book);
-					 SaveAddrBook(&addr_book);
+		case DESTROYContact:
+			DESTROY_ADDRLIST_BOOK(&ADDRLIST);
+			SAVE_ADDRLIST_BOOK(&ADDRLIST);
+			break;
+		case SORTBYNAMEContact:
+			BUBBLE_SORT_ADDRLIST_BOOK(&ADDRLIST);
+			SAVE_ADDRLIST_BOOK(&ADDRLIST);
 			break;
 		case EXIT:
 			break;
 		default:
-			printf("输入错误,请重新输入.");
+			printf("输入非法，请重新输入：\n");
 			break;
 		}
 	}while(input);
