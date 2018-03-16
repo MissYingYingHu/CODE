@@ -1,51 +1,90 @@
+#include"BitMap.h"
 #include<stdio.h>
-#include"address_book.h"
+#include<windows.h>
+void TestInit()
+{
+	TEST_HEADER;
+	BitMapInit(&bm,65);
+	printf("capacity expect is 2,actual is %d\n",bm.capacity );
+	printf(" %p \n",bm.data );
+}
+void TestSet()
+{
+	size_t i = 0;
+	TEST_HEADER;
+	BitMapInit(&bm,65);
+	BitMapSet(&bm,64);
+	BitMapSet(&bm,65);
+	for(;i < bm.capacity ;i++)
+	{
+		printf("[%d],%d  ",i,bm.data[i] );
+	}
+}
+void TestUnSet()
+{
+	size_t i = 0;
+	TEST_HEADER;
+	BitMapInit(&bm,65);
+	BitMapSet(&bm,64);
+	BitMapUnSet(&bm,64);
+	for(;i < bm.capacity ;i++)
+	{
+		printf("[%d],%d  ",i,bm.data[i] );
+	}
+}
+void Test()
+{
+	int ret = 0,ret2 = 0;
+	TEST_HEADER;
+	BitMapInit(&bm,65);
+	BitMapSet(&bm,62);
+	//BitMapSet(&bm,68);
+	//BitMapUnSet(&bm,64);
+	ret = BitMapTest(&bm,62);
+	printf("ret expect is 1,actual is %d\n",ret);
+	BitMapUnSet(&bm,62);
+	ret2 = BitMapTest(&bm,62);
+	printf("ret expect is 0,actual is %d\n",ret2);
+}
+void TestFill()
+{
+	size_t i = 0;
+	TEST_HEADER;
+	BitMapInit(&bm,65);
+	BitMapFill(&bm);
+	for(;i < bm.capacity ;i++)
+	{
+		printf("[%d],%x  ",i,bm.data[i] );
+	}
+}
+void TestUnFill()
+{
+	size_t i = 0;
+	TEST_HEADER;
+	BitMapInit(&bm,65);
+	BitMapUnFill(&bm);
+	for(;i < bm.capacity ;i++)
+	{
+		printf("[%d],%x  ",i,bm.data[i] );
+	}
+}
+void TestDestroy()
+{
+	TEST_HEADER;
+	BitMapInit(&bm,65);
+	BitMapDestroy(&bm);
+	printf("capacity:[%d],bm->data:[%p]\n",bm.capacity ,bm.data );
+}
+////////////////////////////////////////////////
 int main()
 {
-	int input = 0;
-	ADDR_BOOK_Init(&ADDRLIST);
-	LOAD_ADDRLIST_BOOK(&ADDRLIST);
-	do
-	{
-		menu();
-		printf("请选择你的需求：");
-		scanf("%d",&input);
-		switch(input)
-		{
-		case ADDContact:
-			{
-				ADD_ADDR_BOOK(&ADDRLIST);
-				SAVE_ADDRLIST_BOOK(&ADDRLIST);
-			}
-			break;
-		case DELETEContact:
-			ERASE_ADDRLIST_BOOK(&ADDRLIST);
-			SAVE_ADDRLIST_BOOK(&ADDRLIST);
-			break;
-		case FINDContact:
-			FIND_ADDRLIST_BOOK(&ADDRLIST);
-			break;
-		case UPDATAContact:
-			UPDATA_ADDRLIST_BOOK(&ADDRLIST);
-			SAVE_ADDRLIST_BOOK(&ADDRLIST);
-			break;
-		case DISPLAYContact:
-			DISPLAY_ALL_ADDRLIST_BOOK(&ADDRLIST);
-			break;
-		case DESTROYContact:
-			DESTROY_ADDRLIST_BOOK(&ADDRLIST);
-			SAVE_ADDRLIST_BOOK(&ADDRLIST);
-			break;
-		case SORTBYNAMEContact:
-			BUBBLE_SORT_ADDRLIST_BOOK(&ADDRLIST);
-			SAVE_ADDRLIST_BOOK(&ADDRLIST);
-			break;
-		case EXIT:
-			break;
-		default:
-			printf("输入非法，请重新输入：\n");
-			break;
-		}
-	}while(input);
+	TestInit();
+	TestSet();
+	TestUnSet();
+	Test();
+	TestFill();
+	TestUnFill();
+	TestDestroy();
+	system("pause");
 	return 0;
 }
