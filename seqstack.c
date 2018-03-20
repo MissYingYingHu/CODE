@@ -5,13 +5,16 @@
 
 void InitStack(seqstack* stack)
 {
+	if(stack == NULL)
+	{
+		return;
+	}
 	stack->size = 0;
-	stack->data[stack->size ] = 0;
 }
 
 void ShowStack(seqstack* stack)
 {
-	size_t i = 0;
+	int i = 0;
 	if(stack == NULL)
 	{
 		return;
@@ -52,7 +55,7 @@ void PopStack(seqstack* stack)
 }
 int TopStack(seqstack* stack,SElemType* value)
 {
-	if(stack == NULL)
+	if(stack == NULL || value == NULL)
 	{
 		return 0;
 	}
@@ -60,7 +63,7 @@ int TopStack(seqstack* stack,SElemType* value)
 	{
 		return 0;
 	}
-	*value = stack->data[0];
+	*value = stack->data[stack->size - 1];
 	return 1;
 }
 

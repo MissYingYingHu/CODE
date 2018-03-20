@@ -7,10 +7,9 @@
 typedef struct  seqstack 
 {
 	SElemType data[StackMaxSize];
-	size_t size;
+	int size;
 }seqstack;
 
-seqstack stack;
 
 //≥ı ºªØ’ª
 void InitStack(seqstack* stack);
