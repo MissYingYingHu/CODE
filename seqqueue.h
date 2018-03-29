@@ -1,5 +1,5 @@
 #pragma once
-
+#include<stddef.h>
 #define TEST_HEADER printf("\n==================%s================\n",__FUNCTION__)
 
 typedef char QueueType;
@@ -14,7 +14,6 @@ typedef struct SeqQueue
 	size_t size;
 }SeqQueue;
 
-SeqQueue q;
 
 void SeqQueueInit(SeqQueue* q);
 
@@ -25,3 +24,5 @@ void SeqQueuePush(SeqQueue* q,QueueType value);
 void SeqQueuePop(SeqQueue* q);
 
 int SeqQueueTop(SeqQueue* q,QueueType* top);
+
+size_t SeqQueueSize(SeqQueue* q);

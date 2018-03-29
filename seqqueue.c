@@ -57,6 +57,7 @@ void SeqQueuePop(SeqQueue* q)
 		return;
 	}
 	++q->head ;
+	--q->size ;
 	if(q->head >= MaxQueue)
 	{
 		q->head = 0;
@@ -74,4 +75,12 @@ int SeqQueueTop(SeqQueue* q,QueueType* top)
 	}
 	*top = q->data [q->head ];
 	return 1;
+}
+size_t SeqQueueSize(SeqQueue* q)
+{
+	if(q == NULL)
+	{
+		return (size_t)-1;
+	}
+	return q->size ;
 }
