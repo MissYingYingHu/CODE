@@ -1,47 +1,46 @@
-#include"BloomFliter.h"
 #include<stdio.h>
-#include<windows.h>
-
-void TestInit()
+#include<stdlib.h>
+#include<time.h>
+#include"game2.h"
+void menu()
 {
-	BloomFliter bf;
-	TEST_HEADER;
-	BloomFliterInit(&bf);
+	printf("*********************************\n");
+	printf("----1.play             0.exit----\n");
+	printf("*********************************\n");
 }
-void TestInsert()
+void game()
 {
-	char *str = "beautiful";
-	BloomFliter bf;
-	TEST_HEADER;
-	BloomFliterInit(&bf);
-	BloomFliterInsert(&bf,str);
-}
-void TestExist()
-{
-	int ret = 0;
-	char *str = "beautiful";
-	BloomFliter bf;
-	TEST_HEADER;
-	BloomFliterInit(&bf);
-	BloomFliterInsert(&bf,str);
-	ret = BloomFliterExist(&bf,"beautiful");
-	printf("ret expect is 1,actual is %d\n",ret);
-}
-void TestDestroy()
-{
-	char *str = "beautiful";
-	BloomFliter bf;
-	TEST_HEADER;
-	BloomFliterInit(&bf);
-	BloomFliterInsert(&bf,str);
-	BloomFliterDestroy(&bf);
+	char ball[ROWS][COLS]={0};//雷盘
+	char show[ROWS][COLS]={0};//展示盘
+	srand((unsigned int)time(NULL));
+	initborder(ball,ROWS,COLS,'0');
+	//display(ball,ROWS,COLS);//打印雷盘
+	initborder(show,ROWS,COLS,'*');
+	//display(show,ROW,COL);//打印展示盘
+	set_ball(ball,ROWS,COLS,easy_count);
+	display(ball,ROWS,COLS);
+	display(show,ROWS,COLS);
+	print(ball,show,ROW,COL);
+	is_win(show);
 }
 int main()
-{
-	TestInit();
-	TestInsert();
-	TestExist();
-	TestDestroy();
-	system("pause");
-	return 0;
+{	
+	int input =0;
+	do{
+		menu();
+		printf("请选择：-----》");
+		scanf("%d",&input);
+		switch(input)
+		{
+		case 1:
+			game();
+			break;
+		case 0:
+			break;
+		default:
+			printf("输入错误\n");
+			break;
+		}
+	}while(input);
+return 0;
 }
