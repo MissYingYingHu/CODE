@@ -22,7 +22,7 @@ void ShowStack(seqstack* stack)
 	printf("[Õ»µ×]");
 	for(i = 0;i < stack->size ;i++)
 	{
-		printf(" %c ",stack->data [i]);
+		printf(" (%d,%d) ",stack->data[i].row ,stack->data[i].col);
 	}
 	printf("[Õ»¶¥]\n");
 }
@@ -71,5 +71,28 @@ int TopStack(seqstack* stack,SElemType* value)
 void DestroyStack(seqstack* stack)
 {
 	stack->size = 0;
-	stack->data[stack->size ] = 0;
+//	stack->data[stack->size ] = 0;
+}
+
+int SizeStack(seqstack* stack)
+{
+	if(stack == NULL)
+	{
+		return  0;
+	}
+	return stack->size;
+}
+void AssignStack(seqstack* src,seqstack* dst)
+{
+	int i = 0;
+	if(src == NULL || dst == NULL)
+	{
+		return;
+	}
+	dst->size = src->size ;
+	for(i = 0;i < src->size ;i++)
+	{
+		dst->data [i] = src->data [i];
+	}
+	//memcopy(dst,src,sizeof(seqstack));
 }

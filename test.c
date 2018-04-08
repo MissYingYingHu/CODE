@@ -1,46 +1,68 @@
 #include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
-#include"game2.h"
-void menu()
+#include"maze.h"
+#include<windows.h>
+
+#define TEST_HEADER printf("\n==============%s===============\n",__FUNCTION__)
+void MazePrint(Maze* m)
 {
-	printf("*********************************\n");
-	printf("----1.play             0.exit----\n");
-	printf("*********************************\n");
-}
-void game()
-{
-	char ball[ROWS][COLS]={0};//¿◊≈Ã
-	char show[ROWS][COLS]={0};//’π æ≈Ã
-	srand((unsigned int)time(NULL));
-	initborder(ball,ROWS,COLS,'0');
-	//display(ball,ROWS,COLS);//¥Ú”°¿◊≈Ã
-	initborder(show,ROWS,COLS,'*');
-	//display(show,ROW,COL);//¥Ú”°’π æ≈Ã
-	set_ball(ball,ROWS,COLS,easy_count);
-	display(ball,ROWS,COLS);
-	display(show,ROWS,COLS);
-	print(ball,show,ROW,COL);
-	is_win(show);
-}
-int main()
-{	
-	int input =0;
-	do{
-		menu();
-		printf("«Î—°‘Ò£∫-----°∑");
-		scanf("%d",&input);
-		switch(input)
+	int i = 0;
+	int j = 0;
+	for(i = 0;i < MAZE_ROW;i++)
+	{
+		for(j = 0;j < MAZE_COL;j++)
 		{
-		case 1:
-			game();
-			break;
-		case 0:
-			break;
-		default:
-			printf(" ‰»Î¥ÌŒÛ\n");
-			break;
+			printf("%d   ",m->map [i][j]);
 		}
-	}while(input);
-return 0;
+		printf("\n");
+	}
+}
+void Test1()
+{
+	Maze m;
+	Point entry = {4,5};
+	TEST_HEADER;
+	MazeInit(&m);
+	MazePrint(&m);
+	HasPath(&m,entry);
+	MazePrint(&m);
+}
+void Test2()
+{
+	Maze m;
+	Point entry = {4,5};
+	TEST_HEADER;
+	MazeInit(&m);
+	MazePrint(&m);
+	HasPathByLoop(&m,entry);
+	MazePrint(&m);
+}
+void Test3()
+{
+	Maze m;
+	Point entry = {5,1};
+	TEST_HEADER;
+	MazeInit2(&m);
+	MazePrint(&m);
+	HasPathMuch(&m,entry);
+	MazePrint(&m);
+}
+void Test4()
+{
+	Maze m;
+	Point entry = {5,2};
+	TEST_HEADER;
+	MazeInit3(&m);
+	MazePrint(&m);
+	HasPathByCycle(&m,entry);
+	MazePrint(&m);
+}
+/////////////////////////////////
+int main()
+{
+	Test1();
+	Test2();
+	Test3();
+	Test4();
+	system("pause");
+	return 0;
 }
