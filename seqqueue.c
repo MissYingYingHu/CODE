@@ -34,9 +34,10 @@ void SeqQueuePush(SeqQueue* q,QueueType value)
 	{
 		return;
 	}
-	if(q->head == 0)
+	if(q->head == 0 && q->tail == 0)
 	{
-		q->head = q->tail = value;
+		q->data [q->head ] = q->data [q->tail++ ] = value;
+		return;
 	}
 	q->data [q->tail ++] = value;
 	++q->size ;
@@ -51,13 +52,12 @@ void SeqQueuePop(SeqQueue* q)
 	{
 		return;
 	}
-	if(q->head == 0)
+	if(q->head == 0 && q->tail == 0)
 	{
 		//©у╤сап
 		return;
 	}
 	++q->head ;
-	--q->size ;
 	if(q->head >= MaxQueue)
 	{
 		q->head = 0;
@@ -69,18 +69,10 @@ int SeqQueueTop(SeqQueue* q,QueueType* top)
 	{
 		return 0;
 	}
-	if(q->head == 0)
+	if(q->head == q->tail )
 	{
 		return 0;
 	}
 	*top = q->data [q->head ];
-	return 1;
-}
-size_t SeqQueueSize(SeqQueue* q)
-{
-	if(q == NULL)
-	{
-		return (size_t)-1;
-	}
-	return q->size ;
+ 	return 1;
 }

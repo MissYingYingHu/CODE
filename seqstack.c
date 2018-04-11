@@ -5,16 +5,13 @@
 
 void InitStack(seqstack* stack)
 {
-	if(stack == NULL)
-	{
-		return;
-	}
 	stack->size = 0;
+	stack->data[stack->size ] = 0;
 }
 
 void ShowStack(seqstack* stack)
 {
-	int i = 0;
+	size_t i = 0;
 	if(stack == NULL)
 	{
 		return;
@@ -22,7 +19,7 @@ void ShowStack(seqstack* stack)
 	printf("[栈底]");
 	for(i = 0;i < stack->size ;i++)
 	{
-		printf(" (%d,%d) ",stack->data[i].row ,stack->data[i].col);
+		printf(" %c ",stack->data [i]);
 	}
 	printf("[栈顶]\n");
 }
@@ -38,8 +35,7 @@ void PushStack(seqstack* stack,SElemType value)
 		//超出了该栈的最大范围
 		return;
 	}
-	stack->data [stack->size ] = value;
-	++stack->size;
+	stack->data [stack->size++ ] = value;
 }
 void PopStack(seqstack* stack)
 {
@@ -47,7 +43,7 @@ void PopStack(seqstack* stack)
 	{
 		return;
 	}
-	if(stack->size <= 0)
+	if(stack->size == 0)
 	{
 		return;
 	}
@@ -59,7 +55,7 @@ int TopStack(seqstack* stack,SElemType* value)
 	{
 		return 0;
 	}
-	if(stack->size <= 0)
+	if(stack->size == 0)
 	{
 		return 0;
 	}
@@ -71,28 +67,5 @@ int TopStack(seqstack* stack,SElemType* value)
 void DestroyStack(seqstack* stack)
 {
 	stack->size = 0;
-//	stack->data[stack->size ] = 0;
-}
-
-int SizeStack(seqstack* stack)
-{
-	if(stack == NULL)
-	{
-		return  0;
-	}
-	return stack->size;
-}
-void AssignStack(seqstack* src,seqstack* dst)
-{
-	int i = 0;
-	if(src == NULL || dst == NULL)
-	{
-		return;
-	}
-	dst->size = src->size ;
-	for(i = 0;i < src->size ;i++)
-	{
-		dst->data [i] = src->data [i];
-	}
-	//memcopy(dst,src,sizeof(seqstack));
+	stack->data[stack->size ] = 0;
 }

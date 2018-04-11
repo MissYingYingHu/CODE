@@ -1,21 +1,20 @@
 #pragma once
-
+#include<stddef.h>
 #define TESTHEADER printf("\n*************%s************\n",__FUNCTION__)
-#define StackMaxSize 1000
 
-typedef struct Point
-{
-	int row;
-	int col;
-}Point;
-#define SElemType Point
+struct TreeNode;
+typedef struct TreeNode* SElemType;
+//#define SElemType char
+
+#define StackMaxSize 1000
 
 typedef struct  seqstack 
 {
 	SElemType data[StackMaxSize];
-	int size;
+	size_t size;
 }seqstack;
 
+seqstack stack;
 
 //初始化栈
 void InitStack(seqstack* stack);
@@ -34,9 +33,3 @@ int TopStack(seqstack* stack,SElemType* value);
 
 //销毁栈
 void DestroyStack(seqstack* stack);
-
-//求栈中元素的个数
-int SizeStack(seqstack* stack);
-
-//把其中的一个栈赋值到另外一个栈中
-void AssignStack(seqstack* src,seqstack* dst);
