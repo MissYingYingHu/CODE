@@ -1,73 +1,120 @@
-#include"SearchTree.h"
-#include<Windows.h>
+#include"Thread.h"
 
-void TEST_SearchTreeInsert()
+#include<windows.h>
+#define TEST_HESDER printf("\n====================%s====================\n",__FUNCTION__)
+void PreOrder(ThreadNode* root)
 {
-	TEST_HEADER;
-	SearchTreeInit(&root);
-	SearchTreeInsert(&root,'f');
-	SearchTreeInsert(&root,'e');
-	SearchTreeInsert(&root,'a');
-	SearchTreeInsert(&root,'g');
-	SearchTreeInsert(&root,'w');
-	SearchTreeInsert(&root,'c');
-	SearchTreeInsert(&root,'k');
-	printf("先序遍历的结果为：");
+	if(root == NULL)
+	{
+		return;
+	}
+	printf("%c ",root->data );
+	if(root->lflag == Child)
+	{
+		PreOrder(root->left );
+	}
+	if(root->rflag == Child)
+	{
+		PreOrder(root->right );
+	}
+}
+void InOrder(ThreadNode* root)
+{
+	if(root == NULL)
+	{
+		return;
+	}
+	if(root->lflag == Child)
+	{
+	InOrder(root->left );
+	}
+	printf("%c ",root->data );
+	if(root->rflag == Child)
+	{
+		InOrder(root->right );
+	}
+}
+void TestTreeCreate()
+{
+	ThreadNode* root;
+	TreeNodeType arr[] = "ABD**EG***C*F**";
+	TEST_HESDER;
+	root = ThreadTreeCreate(arr,strlen(arr) , '*');
+	printf("先序：");
 	PreOrder(root);
-	printf("\n中序遍历的结果为：");
+	printf("\n");
+	printf("中序：");
 	InOrder(root);
 	printf("\n");
 }
-void TEST_SearchTreeFind()
+void TestPreThreading()
 {
-	SearchTree* ret = NULL;
-	TEST_HEADER;
-	SearchTreeInit(&root);
-	SearchTreeInsert(&root,'f');
-	SearchTreeInsert(&root,'e');
-	SearchTreeInsert(&root,'a');
-	SearchTreeInsert(&root,'g');
-	SearchTreeInsert(&root,'w');
-	SearchTreeInsert(&root,'c');
-	SearchTreeInsert(&root,'k');
-	ret = SearchTreeFind(root,'e');
-	printf("expect is %p,actual is %p\n",root->lchild ,ret);
+	ThreadNode* root;
+	TreeNodeType arr[] = "ABD**EG***C*F**";
+	TEST_HESDER;
+	root = ThreadTreeCreate(arr,strlen(arr) , '*');
+	PreThreading(root);
+	printf("先序：");
+	PreOrder(root);
+	printf("\n");
+	printf("中序：");
+	InOrder(root);
+	printf("\n");
 }
-void TEST_SearchTreeRemove()
+void TestPreOrderByThreading()
 {
-	TEST_HEADER;
-	SearchTreeInit(&root);
-	SearchTreeInsert(&root,'f');
-	SearchTreeInsert(&root,'e');
-	SearchTreeInsert(&root,'a');
-	SearchTreeInsert(&root,'g');
-	SearchTreeInsert(&root,'w');
-	SearchTreeInsert(&root,'c');
-	SearchTreeInsert(&root,'k');
-	SearchTreeInsert(&root,'z');
-	printf("先序遍历的结果为：");
+	ThreadNode* root;
+	TreeNodeType arr[] = "ABD**EG***C*F**";
+	TEST_HESDER;
+	root = ThreadTreeCreate(arr,strlen(arr) , '*');
+	PreThreading(root);
+	PreOrderByThreading(root);
+}
+void TestInThreading()
+{
+	ThreadNode* root;
+	TreeNodeType arr[] = "ABD**EG***C*F**";
+	TEST_HESDER;
+	root = ThreadTreeCreate(arr,strlen(arr) , '*');
+	InThreading(root);
+	printf("先序：");
 	PreOrder(root);
-	printf("\n中序遍历的结果为：");
+	printf("\n");
+	printf("中序：");
 	InOrder(root);
 	printf("\n");
-	SearchTreeRemove(&root,'g');
-	printf("先序遍历的结果为：");
+}
+void TestInOrderByThreading()
+{
+	ThreadNode* root;
+	TreeNodeType arr[] = "ABD**EG***C*F**";
+	TEST_HESDER;
+	root = ThreadTreeCreate(arr,strlen(arr) , '*');
+	InThreading(root);
+	InOrderByThreading(root);
+}
+void TestPostThreading()
+{
+	ThreadNode* root;
+	TreeNodeType arr[] = "ABD**EG***C*F**";
+	TEST_HESDER;
+	root = ThreadTreeCreate(arr,strlen(arr) , '*');
+	PostThreading(root);
+	printf("先序：");
 	PreOrder(root);
-	printf("\n中序遍历的结果为：");
-	InOrder(root);
 	printf("\n");
-	SearchTreeRemove(&root,'e');
-	printf("先序遍历的结果为：");
-	PreOrder(root);
-	printf("\n中序遍历的结果为：");
+	printf("中序：");
 	InOrder(root);
 	printf("\n");
 }
 int main()
 {
-	TEST_SearchTreeInsert();
-	TEST_SearchTreeFind();
-	TEST_SearchTreeRemove();
+	TestTreeCreate();
+	TestPreThreading();
+	TestPreOrderByThreading();
+	TestInThreading();
+	TestInOrderByThreading();
+	TestPostThreading();
 	system("pause");
 	return 0;
 }
