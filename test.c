@@ -1,120 +1,79 @@
-#include"Thread.h"
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#include"game.h"
 
-#include<windows.h>
-#define TEST_HESDER printf("\n====================%s====================\n",__FUNCTION__)
-void PreOrder(ThreadNode* root)
+
+void game()
 {
-	if(root == NULL)
+	char p = 0;
+	char arr[row][col]={0};
+	init(arr,row,col);
+	chess_border(arr,row,col);
+	srand((unsigned int)time(NULL));
+	while(1)
 	{
-		return;
+		player(arr,row,col);
+		p = win(arr,row,col);
+		if( p=='M')
+		{
+			printf("玩家赢\n");
+			break;
+		}
+		else if( p=='Y')
+		{
+			printf("电脑赢\n");
+			break;
+		}
+		else if( p =='e')
+		{
+			printf("平局\n");
+			break;
+		}
+		computer(arr,row,col);
+		p = win(arr,row,col);
+		if( p=='M')
+		{
+			printf("玩家赢\n");
+			break;
+		}
+		else if( p=='Y')
+		{
+			printf("电脑赢\n");
+			break;
+		}
+		else if( p=='e')
+		{
+			printf("平局\n");
+			break;
+		}
 	}
-	printf("%c ",root->data );
-	if(root->lflag == Child)
-	{
-		PreOrder(root->left );
-	}
-	if(root->rflag == Child)
-	{
-		PreOrder(root->right );
-	}
 }
-void InOrder(ThreadNode* root)
+void menu()
 {
-	if(root == NULL)
-	{
-		return;
-	}
-	if(root->lflag == Child)
-	{
-	InOrder(root->left );
-	}
-	printf("%c ",root->data );
-	if(root->rflag == Child)
-	{
-		InOrder(root->right );
-	}
-}
-void TestTreeCreate()
-{
-	ThreadNode* root;
-	TreeNodeType arr[] = "ABD**EG***C*F**";
-	TEST_HESDER;
-	root = ThreadTreeCreate(arr,strlen(arr) , '*');
-	printf("先序：");
-	PreOrder(root);
-	printf("\n");
-	printf("中序：");
-	InOrder(root);
-	printf("\n");
-}
-void TestPreThreading()
-{
-	ThreadNode* root;
-	TreeNodeType arr[] = "ABD**EG***C*F**";
-	TEST_HESDER;
-	root = ThreadTreeCreate(arr,strlen(arr) , '*');
-	PreThreading(root);
-	printf("先序：");
-	PreOrder(root);
-	printf("\n");
-	printf("中序：");
-	InOrder(root);
-	printf("\n");
-}
-void TestPreOrderByThreading()
-{
-	ThreadNode* root;
-	TreeNodeType arr[] = "ABD**EG***C*F**";
-	TEST_HESDER;
-	root = ThreadTreeCreate(arr,strlen(arr) , '*');
-	PreThreading(root);
-	PreOrderByThreading(root);
-}
-void TestInThreading()
-{
-	ThreadNode* root;
-	TreeNodeType arr[] = "ABD**EG***C*F**";
-	TEST_HESDER;
-	root = ThreadTreeCreate(arr,strlen(arr) , '*');
-	InThreading(root);
-	printf("先序：");
-	PreOrder(root);
-	printf("\n");
-	printf("中序：");
-	InOrder(root);
-	printf("\n");
-}
-void TestInOrderByThreading()
-{
-	ThreadNode* root;
-	TreeNodeType arr[] = "ABD**EG***C*F**";
-	TEST_HESDER;
-	root = ThreadTreeCreate(arr,strlen(arr) , '*');
-	InThreading(root);
-	InOrderByThreading(root);
-}
-void TestPostThreading()
-{
-	ThreadNode* root;
-	TreeNodeType arr[] = "ABD**EG***C*F**";
-	TEST_HESDER;
-	root = ThreadTreeCreate(arr,strlen(arr) , '*');
-	PostThreading(root);
-	printf("先序：");
-	PreOrder(root);
-	printf("\n");
-	printf("中序：");
-	InOrder(root);
-	printf("\n");
+printf("-----------------------------------\n");
+printf("@@@  1.play             0.exit  @@@\n");
+printf("-----------------------------------\n");
 }
 int main()
 {
-	TestTreeCreate();
-	TestPreThreading();
-	TestPreOrderByThreading();
-	TestInThreading();
-	TestInOrderByThreading();
-	TestPostThreading();
-	system("pause");
+	int input = 0;
+	do
+	{
+	menu();
+	printf("请选择：-->");
+	scanf("%d",&input);
+	switch(input)
+	{
+	case 1:
+		game();
+		break;
+	case 0:
+		break;
+	default:
+		printf("选择错误，请重新输入\n");
+		break;
+	}
+	}while(input);
 	return 0;
 }
