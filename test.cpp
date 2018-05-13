@@ -1,175 +1,53 @@
-#include"DLinkList.h"
+#include"vector.cpp"
+#include<string>
 using namespace std;
-#include<windows.h>
-void LinkList::DisplayList(char* mag)
-{
-	if(this->_head == NULL)
-	{
-		return;
-	}
-	cout<<mag;
-	Node* cur = _head->_next ;
-	cout<<"head	";
-	while(cur != _head)
-	{
-		cout<<	cur->_data<<"	";
-		cur = cur->_next ;
-	}
-	cout<<endl;
-}
-//////////////////////////////Test////////////////////////////////////
-#define TEST_HEADER printf("\n------------------%s------------------\n",__FUNCTION__)
-void TestPushBack()
-{
-	LinkList L1;
-	TEST_HEADER;
-	L1.PushBack (2);
-	L1.PushBack (3);
-	L1.PushBack (4);
-	L1.PushBack (5);
-	L1.DisplayList ("Î²²åËÄ¸ö½Úµã£º");
-}
-void TestPopBack()
-{
-	LinkList L1;
-	TEST_HEADER;
-	L1.PushBack (2);
-	L1.PushBack (3);
-	L1.PushBack (4);
-	L1.PushBack (5);
-	L1.DisplayList ("Î²²åËÄ¸ö½Úµã£º");
-	L1.PopBack ();
-	L1.DisplayList ("Î²É¾1¸ö½Úµã£º");
-	L1.PopBack ();
-	L1.PopBack ();
-	L1.PopBack ();
-	L1.DisplayList ("Î²É¾3¸ö½Úµã£º");
-}
-void TestPushFront()
-{
-	LinkList L1;
-	TEST_HEADER;
-	L1.PushFront (2);
-	L1.PushFront (3);
-	L1.PushFront (4);
-	L1.PushFront (5);
-	L1.DisplayList ("Í·²åËÄ¸ö½Úµã£º");
-}
-void TestPopFront()
-{
-	LinkList L1;
-	TEST_HEADER;
-	L1.PushBack (2);
-	L1.PushBack (3);
-	L1.PushBack (4);
-	L1.PushBack (5);
-	L1.DisplayList ("Î²²åËÄ¸ö½Úµã£º");
-	L1.PopFront ();
-	L1.DisplayList ("Í·É¾1¸ö½Úµã£º");
-	L1.PopFront ();
-	L1.PopFront ();
-	L1.DisplayList ("Í·É¾2¸ö½Úµã£º");
-	L1.PopFront ();
-	L1.DisplayList ("Í·É¾3¸ö½Úµã£º");
-}
-void TestFind()
-{
-	LinkList L1;
-	TEST_HEADER;
-	L1.PushFront (2);
-	ListNode* pos = L1.PushFront (3);
-	L1.PushFront (4);
-	L1.PushFront (5);
-	L1.DisplayList ("Î²²åËÄ¸ö½Úµã£º");
-	ListNode* Find = L1.Find (3);
-	cout<<"actual:"<<Find<<endl;
-	cout<<"expect:"<<pos<<endl;
-	ListNode* Find1 = L1.Find (7);
-	cout<<"actual:"<<Find1<<endl;
-	cout<<"expect:"<<NULL<<endl;
-}
-void TestInsertFront()
-{
-	LinkList L1;
-	TEST_HEADER;
-	ListNode* pos1 = L1.PushFront (2);
-	L1.PushFront (3);
-	L1.PushFront (4);
-	ListNode* pos = L1.PushFront (5);
-	L1.DisplayList ("Í·²åËÄ¸ö½Úµã£º");
-	L1.InsertFront (pos1,6);
-	L1.DisplayList ("²åÈëÒ»¸ö½Úµã£º");
-	L1.InsertFront (pos,7);
-	L1.DisplayList ("²åÈëÒ»¸ö½Úµã£º");
-}
-void TestInsertBack()
-{
-	LinkList L1;
-	TEST_HEADER;
-	ListNode* pos1 = L1.PushFront (2);
-	L1.PushFront (3);
-	L1.PushFront (4);
-	ListNode* pos = L1.PushFront (5);
-	L1.DisplayList ("Í·²åËÄ¸ö½Úµã£º");
-	L1.InsertBack (pos1,6);
-	L1.DisplayList ("²åÈëÒ»¸ö½Úµã£º");
-	L1.InsertBack (pos,7);
-	L1.DisplayList ("²åÈëÒ»¸ö½Úµã£º");
-}
-void TestErase()
-{
-	LinkList L1;
-	TEST_HEADER;
-	ListNode* pos1 = L1.PushFront (2);
-	L1.PushFront (3);
-	L1.PushFront (4);
-	ListNode* pos = L1.PushFront (5);
-	L1.DisplayList ("Í·²åËÄ¸ö½Úµã£º");
-	L1.Erase (pos1);
-	L1.DisplayList ("²åÈëÒ»¸ö½Úµã£º");
-	L1.Erase(pos);
-	L1.DisplayList ("²åÈëÒ»¸ö½Úµã£º");
-}
-void TestLinkList()
-{
-	LinkList L1;
-	TEST_HEADER;
-	L1.PushFront (2);
-	L1.PushFront (3);
-	L1.PushFront (4);
-	L1.PushFront (5);
-	L1.DisplayList ("Í·²åËÄ¸ö½Úµã£º");
-	LinkList L2(L1);
-	L2.DisplayList ("Í·²åËÄ¸ö½Úµã£º");
-}
+
 void Test()
 {
-	LinkList L1;
-	TEST_HEADER;
-	L1.PushFront (2);
-	L1.PushFront (3);
-	L1.PushFront (4);
-	L1.PushFront (5);
-	L1.DisplayList ("Í·²åËÄ¸ö½Úµã£º");
-	LinkList L2;
-	L2.PushFront (4);
-	L2.PushFront (5);
-	L2.DisplayList ("Í·²åÁ½¸ö½Úµã£º");
-	L2 = L1;
-	L2.DisplayList ("Í·²åËÄ¸ö½Úµã£º");
+    Vector<int> v;
+    cout<<v.Empty()<<endl;
+    //cout<<v.Front()<<endl;
+    v.Insert(0,1);
+    v.Insert(0,2);
+    v.Insert(0,3);
+    v.Show("æ’å…¥ä¸‰ä¸ªå…ƒç´ ");
+    v.PushBack(4);
+    v.Show("å°¾æ’ä¸€ä¸ªå…ƒç´ ");
+    cout<<v.Front()<<endl;
+    Vector<int> v1;
+    v1.Insert(0,1);
+    v1.Insert(0,2);
+    v1.Insert(0,4);
+    v1.Show("æ’å…¥ä¸‰ä¸ªå…ƒç´ ");
+    v1 = v;
+    v1.Show("èµ‹å€¼v:");
+    Vector<int> v2(v1);
+    v2.Show("æ‹·è´æ„é€ :");
+    v.Erase(0);
+    v.Show("åˆ é™¤é¦–å…ƒç´ å");
+    v.Erase(5);
+    cout<<v.Empty()<<endl;
+    v.Show("åˆ é™¤å°¾å…ƒç´ å");
+    Vector<string> s;
+    s.Show("å°¾æ’5ä¸ªå­—ç¬¦ä¸²:");
+    s.PushBack("aaa");
+    s.Show("å°¾æ’5ä¸ªå­—ç¬¦ä¸²:");
+    s.PushBack("bbbb");
+    s.PushBack("ccccc");
+    s.PushBack("dddddd");
+    s.PushBack("eeeeeee");
+    s.Show("å°¾æ’5ä¸ªå­—ç¬¦ä¸²:");
+    Vector<string> s1(s);
+    s1.Show("æ‹·è´æ„é€ :");
+    Vector<string> s2;
+    s2 = s;
+    s2.Show("èµ‹å€¼:");
+    cout<<s2.Front()<<endl;
 }
+
 int main()
 {
-	TestPushBack();
-	TestPopBack();
-	TestPushFront();
-	TestPopFront();
-	TestFind();
-	TestInsertFront();
-	TestInsertBack();
-	TestErase();
-	TestLinkList();
-	Test();
-	system("pause");
-	return 0;
+    Test();
+    return 0;
 }
+
