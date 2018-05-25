@@ -1,41 +1,62 @@
-#include<windows.h>
-#include"scheduling.h"
+class Solution {
+public:
+    int StrToInt(string str) {
+        if(str.size() <= 0)
+        {
+            return 0;
+        }
+        int flag = 0;
+        int number = 0;
+        int i = 0;
+        while(i < str.size())
+        {
+            if(str[i] == '+')
+            {
+                flag = 1;
+                ++i;
+            }
+            else if(str[i] == '-')
+            {
+                flag = -1;
+                ++i;
+            }
+            if(str[i] >= '0' && str[i] <= '9')
+            {
+                number = number*10 + str[i] - '0';
+                ++i;
+            }
+            else
+            {
+                number = 0;
+                break;
+            }
+        }
+		if(flag != 0)
+		{
+			number *= flag;
+		}
 
-#define Test_Header printf("\n====================%s==================\n",__FUNCTION__)
+        return number;
+    }
+};
 
-
-void Test_Push()
-{
-	PCB_Struct* head;
-	Test_Header;
-	PCB_Struct_Init(&head);
-	PCB_Struct_Push(&head,"p1",2,1);
-	PCB_Struct_Push(&head,"p2",3,5);
-	PCB_Struct_Push(&head,"p3",1,3);
-	PCB_Struct_Push(&head,"p4",2,4);
-	PCB_Struct_Push(&head,"p5",4,2);
-	Display(head);
-}
-
-void Test_Work()
-{
-	PCB_Struct* head;
-	Test_Header;
-	PCB_Struct_Init(&head);
-	PCB_Struct_Push(&head,"p1",2,1);
-	PCB_Struct_Push(&head,"p2",3,5);
-	PCB_Struct_Push(&head,"p3",1,3);
-	PCB_Struct_Push(&head,"p4",2,4);
-	PCB_Struct_Push(&head,"p5",4,2);
-	Display(head);
-	PCB_Work(head);
-}
-
+class StringRotation {
+public:
+    string rotateString(string A, int n, int p) {
+		A += A;
+		return A.substr((p+1)%n,n);
+    }
+};
 int main()
 {
-	Test_Push();
-	Test_Work();
-	Sleep(5);
+	StringRotation s;
+	string str = "ABCDEFGH";
+	cout<<s.rotateString(str,8,4)<<endl;
+
+	Solution s;
+	string str = "la123423";
+	cout<<s.StrToInt(str)<<endl;;
+
 	system("pause");
 	return 0;
 }
