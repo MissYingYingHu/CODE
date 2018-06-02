@@ -1,20 +1,13 @@
 #pragma once
-#include<stddef.h>
 #include<unistd.h>
 #include<stdio.h>
-#include<string.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<sys/shm.h>
 
-typedef struct MsgBuf
-{
-    long mtype;
-    char mtext[128];
-}msgbuf;
-int CreateMsgQueue();
+int CreateShm();
 
-int OpenMsgQueue();
+int OpenShm();
 
-int DestroyMsgQueue(int msgid);
+void DestroyShm(int shmid);
 
-int SendMsg(int msgid,char* msg,size_t size,int type);
-
-int ReceiveMsg(int msgid,char* buf,size_t size,int flag);
