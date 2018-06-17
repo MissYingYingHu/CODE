@@ -61,6 +61,59 @@ protected:
     int* count;
 };
 
+//数组的处理方式
+//析构不同
+template<class T>
+class Share_Array
+{
+    friend class Weak_Ptr<T>;
+public:
+    Share_Array(T* _ptr)
+        :ptr(_ptr)
+         ,count(new int(1))
+    {}
+    ~Share_Array()
+    {
+        if(--(*count) == 0)
+        {
+            delete count;
+            if(ptr)
+            {
+                delete[] ptr;
+                printf("~Share_Array()\n");
+            }
+        }
+    }
+    T& operator[](size_t pos)
+    {
+        return ptr[pos];
+    }
+    Share_Array(Share_Array<T>& s)
+        :ptr(s.ptr)
+         ,count(s.count)
+    {
+        ++(*count);
+    }
+    Share_Array<T>& operator=(Share_Array<T>& s)
+    {
+        //if(this != &s)
+        if(ptr != s.ptr)
+        {
+            if(--(*count) == 0)
+            {
+                delete ptr;
+                delete count;
+            }
+            ptr = s.ptr;
+            count = s.count;
+            ++(*count);
+        }
+        return *this;
+    }
+protected:
+    T* ptr;
+    int* count;
+};
 template<class T>
 class Weak_Ptr
 {
