@@ -9,13 +9,13 @@ Vector<T>::Vector()
 {}
 
 template<typename T> 
-size_t Vector<T>::Size() 
+size_t Vector<T>::Size() const 
 {
     return _finish - _first;
 }
 
 template<class T> 
-size_t Vector<T>::Capacity()
+size_t Vector<T>::Capacity() const
 {
     return _endofstorage - _first;
 }
@@ -25,26 +25,40 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& v)
 {
     if(this != &v)
     {
-        T* tmp = new T[v._finish - v._first];
-        memcpy(tmp,v._first,sizeof(T)*(v._finish - v._first));
-        delete[] _first;
-        _first = tmp;
-        _finish = _first + (v._finish - v._first);
-        _endofstorage = _first + (v._finish - v._first);
+        if(v.Size() > 0)
+        {
+            T* tmp = new T[v.Size()];
+            //memcpy(tmp,v._first,sizeof(T)*(v._finish - v._first));
+            for(size_t i = 0;i < v.Size();++i)
+            {
+                tmp[i] = v._first[i];
+            }
+            delete[] _first;
+            _first = tmp;
+            _finish = _first + v.Size();
+            _endofstorage = _first + v.Size();
+        }
     }
     return *this;
 }
 
 template<class T> 
 Vector<T>::Vector(const Vector<T>& v)
+    :_first(NULL)
+     ,_finish(NULL)
+     ,_endofstorage(NULL)
 {
     if(v._first != v._finish)
     {
-       T* tmp = new T[v._finish - v._first];
-       memcpy(tmp,v._first,sizeof(T)*(v._finish - v._first));
-       _first = tmp;
-       _finish = tmp + (v._finish - v._first);
-       _endofstorage = tmp + (v._finish - v._first);
+        T* tmp = new T[v.Size()];
+        //memcpy(tmp,v._first,sizeof(T)*(v._finish - v._first));
+        for(size_t i = 0;i < v.Size();++i)
+        {
+            tmp[i] = v._first[i];
+        }
+        _first = tmp;
+        _finish = _first + v.Size();
+        _endofstorage = _first + v.Capacity();
     }
 }
  

@@ -10,8 +10,8 @@ class Vector
 public:
     Vector();
     Vector(const Vector<T>& v);
-    size_t Size();
-    size_t Capacity();
+    size_t Size() const;
+    size_t Capacity() const;
     void Expand(size_t n);
     Vector<T>& operator=(const Vector<T>& v);
     void PushBack(const T& value);
