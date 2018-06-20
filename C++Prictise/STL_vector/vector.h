@@ -39,15 +39,19 @@ public:
         {
             if(v.Size() > 0)
             {
-                T* tmp = new T[v.Size()];
-                for(size_t i = 0;i < v.Size();++i)
-                {
-                    tmp[i] = v._first[i];
-                }
-                delete[] _first;
-                _first = tmp;
-                _finish = _first + v.Size();
-                _endofstorage = _first + v.Size();
+                MyVector<T> v;
+                swap(_first,v._first);
+                swap(_finish,v._finish);
+                swap(_endofstorage,v._endofstorage);
+                //T* tmp = new T[v.Size()];
+                //for(size_t i = 0;i < v.Size();++i)
+                //{
+                //    tmp[i] = v._first[i];
+                //}
+                //delete[] _first;
+                //_first = tmp;
+                //_finish = _first + v.Size();
+                //_endofstorage = _first + v.Size();
             }
             else
             {
