@@ -45,7 +45,6 @@ int main(int argc,char* argv[])
         else
         {
             buf[read_size] = '\0';
-            //printf("%s\n",buf);
             write(cli_sock,buf,strlen(buf));
         }
         read_size = read(cli_sock,buf,sizeof(buf) - 1);

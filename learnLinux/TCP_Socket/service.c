@@ -43,35 +43,40 @@ int main(int argc,char* argv[])
     printf("listening success...\n");
     sockaddr_in client;
     socklen_t len = sizeof(client);
-    //接收请求,该函数返回的是一个文件描述符
-    int accept_ret = accept(ser_sock,(sockaddr*)&client,&len);
-    if(accept_ret < 0)
-    {
-        perror("accept failed\n");
-        close(ser_sock);
-        return 2;
-    }
     while(1)
     {
-        char buf[1024] = {0};
-        ssize_t read_size = read(accept_ret,buf,sizeof(buf) - 1);
-        if(read_size < 0)
+        //接收请求,该函数返回的是一个文件描述符
+        int accept_ret = accept(ser_sock,(sockaddr*)&client,&len);
+        if(accept_ret < 0)
         {
-            perror("read failed\n");
+            perror("accept failed\n");
             close(ser_sock);
-            return 1;
+            return 2;
         }
-        else if (read_size == 0)
+        char buf[1024] = {0};
+        while(1)
         {
-            printf("read done!\n");
-            return 0;
+            ssize_t read_size = read(accept_ret,buf,sizeof(buf) - 1);
+            if(read_size < 0)
+            {
+                continue;
+            }
+            else if (read_size == 0)
+            {
+                //如果读到了0,也表示对方已经关闭了连接
+                printf("disconnect!\n");
+                close(accept_ret);
+                break;   //如果有其它的客户端请求时,就会在第一个客户端退出后,跳出次循环,然后重新调用accept()来执行该进程的请求.
+                //return 0;     
+                //如果使用了return就会直接退出该进程,因为这个return是在main()中.
+            }
+            else
+            {
+                buf[read_size] = '\0';
+                printf("client:-%s:%d--says:%s\n",inet_ntoa(client.sin_addr),ntohs(client.sin_port),buf);
+            }
+            write(accept_ret,buf,strlen(buf));
         }
-        else
-        {
-            buf[read_size] = '\0';
-            printf("client:-%s:%d--says:%s\n",inet_ntoa(client.sin_addr),ntohs(client.sin_port),buf);
-        }
-        write(accept_ret,buf,strlen(buf));
     }
     close(ser_sock);
     return 0;
