@@ -109,6 +109,7 @@ int main(int argc,char* argv[])
     printf("server success\n");
     //进入循环事件
     fds rfd;
+    printf("%lu\n",sizeof(rfd.fd));
     FD_SET_init(&rfd);
     Set_Add(&rfd,ret);
     while(1)

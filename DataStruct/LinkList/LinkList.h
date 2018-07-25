@@ -32,9 +32,11 @@ void RemoveAllNode(LinkList** head,LinkNodeType value);
 int EmptyLinkList(LinkList* head);
 //求链表的元素个数
 size_t SizeLinkList(LinkList* head);
+
 ///////////////////////////////////////////////////////////////////
 /////以下是常见面试题
 //////////////////////////////////////////////////////////////////
+
 //单链表逆序打印
 void ReversePrintLinkList(LinkList* head);
 //不允许遍历链表，在pos之前插入

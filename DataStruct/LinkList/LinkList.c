@@ -266,7 +266,7 @@ size_t SizeLinkList(LinkList* head)
 {
 	if(head == NULL)
 	{
-		return;
+		return 0;
 	}
 	size_t count = 0;
 	LinkList* cur = head;
