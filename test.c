@@ -1,3 +1,4 @@
+// nihao
 class Solution {
 public:
     int StrToInt(string str) {
