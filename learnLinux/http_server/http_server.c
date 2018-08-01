@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <sys/sendfile.h>
+#include <signal.h>
 
 #define SIZE (1024*4)
 typedef struct sockaddr sockaddr;
@@ -30,7 +31,7 @@ int ReadLine(int sock,char buf[],size_t max_size)
     //从sock中读取字符,一次读一个
     char c = '\0';
     size_t index = 0;
-    while(index < max_size - 1)
+    while(index < max_size)
     {
         ssize_t read_size = recv(sock,&c,1,0);
         if(read_size <= 0)
@@ -122,16 +123,16 @@ int parse_quary(char* url,char** url_path,char** quary_string)
 
 int Header(int sock,int* length)
 {
-    char buf[SIZE] = {0};
     while(1)
     {
+        char buf[SIZE] = {0};
         ssize_t read_size = ReadLine(sock,buf,sizeof(buf));
         if(read_size < 0)
         {
             //读失败
             return -1;
         }
-        //if(read_size == 0)
+        //if(read_size == 0)    //发现不能等于0
         //{
         //    //读完了，还没有读到'\n'，说明也出错了
         //    return -1;
@@ -142,26 +143,15 @@ int Header(int sock,int* length)
         }
         //进行判断Content-Length
         const char* con = "Content-Length: ";
-        if(length != NULL && strncmp(buf,con, strlen(con)) == 0)
+        if(length != NULL && strncmp(buf,con,strlen(con)) == 0)
         {
             *length = atoi(buf + strlen(con));
-            //在这儿，找到了长度并不能立即返回。
+            //在这儿，找到了长度并不能立即返回。要将header中所有的数据都读出来。（注意粘包问题）
         }
     }
     return 0;
 }
 
-void Handler404(int sock)
-{
-    //处理错误：要进行报文响应的错误回复
-    const char* first_line = "HTTP/1.1 404 Not Found\n";
-    const char* black_line = "\n";
-    const char* body = "<head><meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\"></head>"
-                        "<h1>oh,no!!访问出错啦</h1>";
-    send(sock,first_line,strlen(first_line),0);
-    send(sock,black_line,strlen(black_line),0);
-    send(sock,body,strlen(body),0);
-}
 
 int Is_Dir(const char* file_path)
 {
@@ -183,19 +173,13 @@ void file_path(const char* url_path,char* file_path)
     sprintf(file_path,"./root%s",url_path);
     //填充目录
     //如果是根目录：/ ====》/index.html
-    //file_path  ====》 ./root/index.html
     if(file_path[strlen(file_path) - 1] == '/')
     {
-        strcat(file_path,"index.html");
+        strcat(file_path,"main.html");
     }
-    //    /image/ ====> /image/index.html
-    if(file_path[strlen(file_path) - 1] == '/')
+    else if(Is_Dir(file_path))
     {
-        strcat(file_path,"index.html");
-    }
-    //判断是否是目录
-    if(Is_Dir(file_path))
-    {
+        //判断是否是目录
         strcat(file_path,"/index.html");
     }
 }
@@ -209,6 +193,18 @@ int GetFileSize(const char* file)
         return 0;
     }
     return s.st_size;
+}
+
+void Handler404(int sock)
+{
+    //处理错误：要进行报文响应的错误回复
+    const char* first_line = "HTTP/1.1 404 Not Found\n";
+    const char* black_line = "\n";
+    const char* body = "<head><meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\"></head>"
+                        "<h1>oh,no!!访问出错啦</h1>";
+    send(sock,first_line,strlen(first_line),0);
+    send(sock,black_line,strlen(black_line),0);
+    send(sock,body,strlen(body),0);
 }
 
 int ResponseStaticFile(int sock,char* file_path)
@@ -248,6 +244,131 @@ int StaticFile(int sock,FocusField* focu)
     file_path(focu->url_path,file);
     //2.就是服务器对于静态页面的响应了。
     int ret = ResponseStaticFile(sock,file);
+    return ret;
+}
+
+//父进程：要做的事：
+//1.将body或者quary_string写进管道之中
+//2.子进程完成程序替换之后，将管道之中的数据读出来再写回到相应之中。
+int FatherHeadlerDynamicPage(int sock,FocusField* focu,int father_write,int father_read)
+{
+   if(strcasecmp(focu->method,"POST") == 0)
+   {
+     int i = 0;
+     char c = '\0';
+     for(i = 0;i < focu->content_length;++i)
+     {
+       read(sock,&c,1);
+       write(father_write,&c,1);
+     }
+   }
+   //构造HTTP响应
+   const char* first_line = "HTTP/1.1 200 OK\n";
+   send(sock,first_line,strlen(first_line),0);
+   const char* black_line = "\n";
+   send(sock,black_line,strlen(black_line),0);
+   //循环的从管道之中读取
+   char r = '\0';
+   while(read(father_read,&r,1))
+   {
+      send(sock,&r,1,0);
+   }
+   //可以使用信号忽略子进程，也可以使用wait/waitpid去等待子进程
+   return 200;
+}
+
+//子进程要做的事：
+//1.设置相关的环境变量
+//2.把标准输出，标准输入重定向到管道之中
+//3.进行程序替换
+int SonHeadlerDynamicPage(FocusField* focu,int son_read,int son_write)
+{
+    char method_env[SIZE] = {0}; 
+    sprintf(method_env,"REQUEST_METHOD=%s",focu->method);
+    putenv(method_env);
+    //要进行判断是GET/POST方法
+    if(strcasecmp(focu->method,"GET") == 0)
+    {
+      char quary_env[SIZE] = {0};
+      sprintf(quary_env,"QUERY_STRING=%s",focu->quary_string);
+      putenv(quary_env);
+    }
+    else
+    {
+      char content_env[SIZE] = {0};
+      sprintf(content_env,"CONTENT_LENGTH=%d",focu->content_length);
+      putenv(content_env);
+    }
+    //把标准输入重定向到管道的读端
+    dup2(son_read,0);
+    //把标准输出重定向到管道的写端
+    dup2(son_write,1);
+
+    char path[SIZE] = {0};
+    file_path(focu->url_path,path); 
+    if(execl(path,path,NULL) < 0)
+    {
+      exit(1);
+    }
+    return 200;
+}
+
+int HanderDynamicPage(int sock,FocusField* focu)
+{
+    int ret = 200;
+    //1.创建一对匿名管道
+    int fd1[2],fd2[2];
+    if(pipe(fd1) < 0)
+    {
+      ret = 404;
+      perror("pipe");
+      return ret;
+    }
+    if(pipe(fd2) < 0)
+    {
+      close(fd1[0]);
+      close(fd1[1]);
+      ret = 404;
+      perror("pipe");
+      return ret;
+    }
+    int father_read = fd1[0];
+    int son_write = fd1[1];
+    int son_read = fd2[0];
+    int father_write = fd2[1];
+
+    //2.创建子进程
+    int fork_ret = fork(); 
+    if(fork_ret < 0)
+    {
+      ret = 404;
+      perror("fork");
+      goto END;
+    }
+    else if(fork_ret > 0)
+    {
+      //父进程
+      close(son_read);
+      close(son_write);
+      ret = FatherHeadlerDynamicPage(sock,focu,father_write,father_read);
+    }
+    else
+    {
+      //子进程
+      close(father_read);
+      close(father_write);
+      ret = SonHeadlerDynamicPage(focu,son_read,son_write);
+    }
+
+    close(fd1[0]);
+    close(fd1[1]);
+    close(fd2[0]);
+    close(fd2[1]);
+END:
+    if(ret != 200)
+    {
+      return 404;
+    }
     return ret;
 }
 
@@ -299,13 +420,13 @@ void HandlerProcess(int sock)
     {
         //b)处理动态页面,采用CGI(通用网关接口)技术,
         //包含quary_string的GET方法
-
+        err_code = HanderDynamicPage(sock,&focu);
     }
-    else if(strcasecmp(focu.quary_string,"POST") == 0)
+    else if(strcasecmp(focu.method,"POST") == 0)
     {
         //b)处理动态页面,采用CGI(通用网关接口)技术,
         //POST请求的都属于动态页面
-
+        err_code = HanderDynamicPage(sock,&focu);
     }
     else
     {
@@ -367,6 +488,8 @@ int main(int argc,char* argv[])
         printf("Usage:./server [ip] [port]\n");
         return 1;
     }
+    signal(SIGCHLD,SIG_IGN);
+    signal(SIGPIPE,SIG_IGN);
     //初始化服务器
     int listen_sock = server_start(argv[1],atoi(argv[2]));
     if(listen_sock < 0)
