@@ -263,6 +263,7 @@ void PreOrderByLoop(TreeNode* root)
 	}
 	printf("\n");
 }
+
 void InOrderByLoop(TreeNode* root)
 {
 	seqstack stack;
